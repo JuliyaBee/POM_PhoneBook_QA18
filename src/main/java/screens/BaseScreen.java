@@ -11,37 +11,58 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class
 BaseScreen {
-    AppiumDriver<MobileElement>driver;
-    public BaseScreen(AppiumDriver<MobileElement>driver){
-        this.driver=driver;
+    AppiumDriver<MobileElement> driver;
+
+    public BaseScreen(AppiumDriver<MobileElement> driver) {
+        this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
 
     }
-    public void type(MobileElement element, String text){
-        if (text==null)return;
+
+    public void type(MobileElement element, String text) {
         element.click();
         pause(5);
-        element.clear();
-        element.sendKeys(text);
+       element.clear();
+//        pause(5);
+//        element.clear();
+//        if (text == null) return;
+//        element.click();
+//        pause(5);
+//        element.clear();
+        if(text!=null) {
+            element.sendKeys(text);
+        }
+        driver.hideKeyboard();
     }
-    public void pause(int time){
+
+    public void pause(int time) {
         try {
             Thread.sleep(time);
-        }catch(InterruptedException e){
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-    public void waitElement(MobileElement element, int time){
+
+    public void waitElement(MobileElement element, int time) {
         new WebDriverWait(driver, time).until(
                 ExpectedConditions.visibilityOf((element))
         );
     }
-    public boolean shouldHave(MobileElement element, String text, int time){
+
+    public boolean shouldHave(MobileElement element, String text, int time) {
         return new WebDriverWait(driver, time)
                 .until(ExpectedConditions.textToBePresentInElement(element, text));
     }
 
-    public void returnToHome(){
-        driver.navigate().to("http://localhost:4723/wd/hub");
+
+
+    public boolean isDisplayedWithException(MobileElement element) {
+        try {
+            waitElement(element, 10);
+            return element.isDisplayed()
+                    ;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

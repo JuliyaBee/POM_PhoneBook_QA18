@@ -13,6 +13,7 @@ public class SplashScreen extends BaseScreen {
         super(driver);
     }
     public  String getVersion(){
+
         return versionTextView.getText();
 
     }
